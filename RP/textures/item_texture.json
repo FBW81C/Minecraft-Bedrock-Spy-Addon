@@ -1,0 +1,12 @@
+{
+  "resource_pack_name": "FBW81C's Spy Addon v0.1",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "spy_controller": {
+      "textures": "textures/items/name_tag"
+    },
+    "camera_viewer": {
+      "textures": "textures/items/name_tag"
+    }
+  }
+}

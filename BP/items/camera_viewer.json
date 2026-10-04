@@ -1,0 +1,18 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "fbw81c:camera_viewer",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.fbw81c:camera_viewer"
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "camera_viewer"
+    }
+  }
+}

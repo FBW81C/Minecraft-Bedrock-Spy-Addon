@@ -1,2 +1,3 @@
 *.mcaddon
 *.mcpack
+deploy.ps1

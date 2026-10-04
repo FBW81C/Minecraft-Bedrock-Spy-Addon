@@ -1,0 +1,26 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "FBW81C's Spy Addon v0.1",
+    "description": "An Addon for Minecraft Bedrock to spy on players with security cameras",
+    "uuid": "814102b2-fbd8-4720-a8f7-606768b7c466",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 21, 0]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "7011c535-af35-4db5-a57d-f732cfec0724",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+        "uuid": "431c80aa-ce0f-4769-8e65-959f6179fc35",
+        "version": [1, 0, 0]
+    }
+  ],
+  "metadata": {
+    "authors": ["FBW81C"]
+  }
+}
