@@ -7,6 +7,13 @@ Current version: v1.0
 Author: FBW81C
 YouTube: FBW81C
 
+![Logo Spy Addon](https://github.com/FBW81C/Minecraft-Bedrock-Spy-Addon/blob/main/assets/pack_icon.png)
+
+[![Release Version Badge](https://img.shields.io/github/v/release/FBW81C/Minecraft-Bedrock-Spy-Addon)](https://github.com/FBW81C/Minecraft-Bedrock-Spy-Addon/releases)
+[![Downloads@latest](https://img.shields.io/github/downloads/FBW81C/Minecraft-Bedrock-Spy-Addon/latest/total)](https://github.com/FBW81C/Minecraft-Bedrock-Spy-Addon/releases/latest)
+[![Total Downloads](https://img.shields.io/github/downloads/FBW81C/Minecraft-Bedrock-Spy-Addon/total)](https://github.com/FBW81C/Minecraft-Bedrock-Spy-Addon/releases)
+
+
 ## Features
 
 - **Invisible Security cameras** with name, position, orientation and dimension (create, list, edit, delete)
