@@ -16,7 +16,7 @@ import { openSpyControllerMenu } from "./ui/spyController.js";
 world.afterEvents.itemUse.subscribe(async (event) => {
     const { source: player, itemStack } = event;
 
-    if (itemStack.typeId === "fbw81c:spy_controller") {
+    if (itemStack.typeId === "fbw81c_spyaddon:spy_controller") {
         await openSpyControllerMenu(player);
     }
 });

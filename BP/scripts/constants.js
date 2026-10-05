@@ -7,7 +7,7 @@
 import { world } from "@minecraft/server";
 
 /** Dynamic property key under which the cameras are stored (as JSON). */
-export const CAMERA_DATA_KEY = "spyaddon:cameras";
+export const CAMERA_DATA_KEY = "fbw81c_spyaddon:cameras";
 
 /**
  * @typedef {Object} Camera

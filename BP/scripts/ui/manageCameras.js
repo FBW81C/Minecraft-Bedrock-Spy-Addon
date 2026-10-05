@@ -12,10 +12,10 @@ import { cameras, saveCameras, getNextCameraId } from "../constants.js";
 import { startView, stopView, getView } from "../cameraService.js";
 
 /** Item id of the camera viewer item. */
-const CAMERA_ITEM_ID = "fbw81c:camera_viewer";
+const CAMERA_ITEM_ID = "fbw81c_spyaddon:camera_viewer";
 
 /** Dynamic property on the camera item that stores the linked camera id. */
-const CAMERA_ID_PROPERTY = "spyaddon:camera_id";
+const CAMERA_ID_PROPERTY = "fbw81c_spyaddon:camera_id";
 
 /**
  * Hotbar slot in which each player last held a camera item (-1 if none).

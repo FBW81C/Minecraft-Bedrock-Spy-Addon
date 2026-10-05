@@ -1,5 +1,5 @@
 ## Author: FBW81C
 ## German item names (de_DE)
 
-item.fbw81c:spy_controller=§l§bFBW81Cs Spion-Steuerung§r
-item.fbw81c:camera_viewer=§l§eKamera-Betrachter§r (keine Verwendung)
+item.fbw81c_spyaddon:spy_controller=§l§bFBW81Cs Spion-Steuerung§r
+item.fbw81c_spyaddon:camera_viewer=§l§eKamera-Betrachter§r (keine Verwendung)
