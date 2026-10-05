@@ -18,11 +18,7 @@ export const Translations = {
 
         ok: "OK",
 
-        endSpying: "§l§cEnd spying§r",
-
-        // Action bar messages
-        spyingStarted: "§aYou are spying on §e§l#NAME#§r§a!§r",
-        spyingEnded: "§cEnded spying. Camera reset.§r"
+        endSpying: "§l§cEnd spying§r"
     },
     de: {
         title: "§l§bSpieler ausspionieren§r",
@@ -33,10 +29,6 @@ export const Translations = {
 
         ok: "OK",
 
-        endSpying: "§l§cSpionage beenden§r",
-
-        // Action bar messages
-        spyingStarted: "§aDu spionierst §e§l#NAME#§r§a aus!§r",
-        spyingEnded: "§cSpionage beendet. Kamera zurückgesetzt.§r"
+        endSpying: "§l§cSpionage beenden§r"
     }
 };

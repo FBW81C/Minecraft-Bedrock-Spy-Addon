@@ -1,11 +1,14 @@
 /**
  * @file Add-on entry point. Registers the item-use handler that opens
- *       the Spy Controller menu.
+ *       the Spy Controller menu, and loads the camera service and the
+ *       /scriptevent interface.
  * @author FBW81C
  */
 
 import { world } from "@minecraft/server";
 import "./worldLoad.js";
+import "./cameraService.js";
+import "./spyScriptEvent.js";
 
 import { openSpyControllerMenu } from "./ui/spyController.js";
 

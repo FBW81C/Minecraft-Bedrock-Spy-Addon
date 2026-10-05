@@ -9,6 +9,7 @@ import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { Translations } from "../translations/manageCamerasTranslations.js";
 import { getLang, format } from "../helpers.js";
 import { cameras, saveCameras, getNextCameraId } from "../constants.js";
+import { startView, stopView, getView } from "../cameraService.js";
 
 /** Item id of the camera viewer item. */
 const CAMERA_ITEM_ID = "fbw81c:camera_viewer";
@@ -17,18 +18,20 @@ const CAMERA_ITEM_ID = "fbw81c:camera_viewer";
 const CAMERA_ID_PROPERTY = "spyaddon:camera_id";
 
 /**
- * Cameras currently being viewed.
- * Maps a player id to the id of the camera they are looking through.
- * @type {Map<string, number>}
- */
-const activeViews = new Map();
-
-/**
  * Hotbar slot in which each player last held a camera item (-1 if none).
  * Used to detect when a player switches to a camera item.
  * @type {Map<string, number>}
  */
 const lastSelectedCamera = new Map();
+
+/**
+ * Players whose current view was started by holding a camera item.
+ * Maps a player id to the id of that camera. Only these views are ended
+ * again when the item is deselected, so views started in another way
+ * (spy menu, /scriptevent) are never cancelled by switching hotbar slots.
+ * @type {Map<string, number>}
+ */
+const itemStartedViews = new Map();
 
 // CAMERA MANAGEMENT MENUS
 
@@ -393,58 +396,11 @@ function giveCameraItem(player, camera) {
     player.sendMessage(format(t.itemReceived, { NAME: camera.name }));
 }
 
-// CAMERA VIEW
-
-/**
- * Switches the player's view to the given camera.
- * Does nothing (except a message) if the camera is in another dimension.
- *
- * @param {import("@minecraft/server").Player} player
- * @param {import("../constants.js").Camera} camera
- */
-function viewCamera(player, camera) {
-    const t = Translations[getLang(player)];
-
-    // Reset a previous view before switching to a new camera.
-    if (activeViews.has(player.id)) {
-        player.runCommand("camera @s clear");
-    }
-
-    if (player.dimension.id !== camera.dimension) {
-        player.sendMessage(t.cameraOtherDimension);
-        return;
-    }
-
-    const p = camera.position;
-    const r = camera.rotation;
-
-    player.runCommand(
-        `camera @s set minecraft:free pos ${p.x} ${p.y} ${p.z} rot ${r.x} ${r.y}`
-    );
-
-    activeViews.set(player.id, camera.id);
-    player.onScreenDisplay.setActionBar(format(t.viewingCamera, { NAME: camera.name }));
-}
-
-/**
- * Ends the camera view of a player and restores their normal camera.
- *
- * @param {import("@minecraft/server").Player} player
- */
-function stopViewing(player) {
-    if (!activeViews.has(player.id)) return;
-
-    const t = Translations[getLang(player)];
-
-    player.runCommand("camera @s clear");
-    activeViews.delete(player.id);
-    player.onScreenDisplay.setActionBar(t.viewEnded);
-}
-
 // HOTBAR MONITORING
 
 // Every 2 ticks: start the camera view when a player selects a camera item,
-// and end it when they switch to another item.
+// and end it when they switch to another item. The actual camera handling
+// is done by the camera service, this only adds / removes the view.
 system.runInterval(() => {
     for (const player of world.getAllPlayers()) {
         const inventory = player.getComponent("minecraft:inventory")?.container;
@@ -465,10 +421,19 @@ system.runInterval(() => {
 
             // Only (re)start the view when the selected slot changed.
             if (camera && previousSlot !== slot) {
-                viewCamera(player, camera);
+                startView(player.id, { type: "camera", id: camera.id });
+                itemStartedViews.set(player.id, camera.id);
             }
-        } else if (activeViews.has(player.id)) {
-            stopViewing(player);
+        } else if (itemStartedViews.has(player.id)) {
+            const cameraId = itemStartedViews.get(player.id);
+            itemStartedViews.delete(player.id);
+
+            // Only end the view if it is still the one the item started.
+            const view = getView(player.id);
+
+            if (view?.type === "camera" && view.id === cameraId) {
+                stopView(player.id);
+            }
         }
 
         lastSelectedCamera.set(
@@ -478,40 +443,15 @@ system.runInterval(() => {
     }
 }, 2);
 
-// Every 2 ticks: keep the action bar up to date and, for rotatable cameras,
-// let the viewer turn the camera with their own mouse movement.
-system.runInterval(() => {
-    for (const player of world.getAllPlayers()) {
-        const cameraId = activeViews.get(player.id);
-
-        if (!cameraId) continue;
-
-        const camera = cameras.find(c => c.id === cameraId);
-
-        // The camera was deleted while being viewed.
-        if (!camera) {
-            stopViewing(player);
-            continue;
-        }
-
-        const t = Translations[getLang(player)];
-
-        player.onScreenDisplay.setActionBar(format(t.viewingCamera, { NAME: camera.name }));
-
-        if (!camera.canRotate) continue;
-
-        const p = camera.position;
-        const r = player.getRotation();
-
-        player.runCommand(
-            `camera @s set minecraft:free pos ${p.x} ${p.y} ${p.z} rot ${r.x.toFixed(1)} ${r.y.toFixed(1)}`
-        );
-    }
-}, 2);
-
-// Prevent block breaking while looking through a camera.
+// Prevent block breaking while looking through a camera or at another player.
 world.beforeEvents.playerBreakBlock.subscribe((event) => {
-    if (!activeViews.has(event.player.id)) return;
+    if (!getView(event.player.id)) return;
 
     event.cancel = true;
+});
+
+// Clean up when a player leaves.
+world.afterEvents.playerLeave.subscribe(({ playerId }) => {
+    lastSelectedCamera.delete(playerId);
+    itemStartedViews.delete(playerId);
 });

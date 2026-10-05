@@ -76,12 +76,7 @@ export const Translations = {
         inventoryUnavailable: "§cInventory not available.§r",
         inventoryFull: "§cYour inventory is full.§r",
         itemNameTag: "§l§bCamera:§r §f#NAME#§r",
-        itemReceived: "§aReceived camera item for §e§l#NAME#§r§a.§r",
-
-        // Camera view
-        cameraOtherDimension: "§cThe camera is located in a different dimension.§r",
-        viewingCamera: "§aCamera: §e§l#NAME#§r",
-        viewEnded: "§7Camera view ended.§r"
+        itemReceived: "§aReceived camera item for §e§l#NAME#§r§a.§r"
     },
     de: {
         // Main menu
@@ -149,11 +144,6 @@ export const Translations = {
         inventoryUnavailable: "§cInventar nicht verfügbar.§r",
         inventoryFull: "§cDein Inventar ist voll.§r",
         itemNameTag: "§l§bKamera:§r §f#NAME#§r",
-        itemReceived: "§aKamera-Item für §e§l#NAME#§r§a erhalten.§r",
-
-        // Camera view
-        cameraOtherDimension: "§cDie Kamera befindet sich in einer anderen Dimension.§r",
-        viewingCamera: "§aKamera: §e§l#NAME#§r",
-        viewEnded: "§7Kameraansicht beendet.§r"
+        itemReceived: "§aKamera-Item für §e§l#NAME#§r§a erhalten.§r"
     }
 };

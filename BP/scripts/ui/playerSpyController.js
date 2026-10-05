@@ -1,27 +1,18 @@
 /**
- * @file "Spy on a player" feature. Lets a player pick another player and
- *       follow their view through a free camera.
+ * @file "Spy on a player" menu. Lets a player pick another player and
+ *       starts a view through the central camera service.
  * @author FBW81C
  */
 
-import { world, system } from "@minecraft/server";
+import { world } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 import { Translations } from "../translations/playerSpyControllerTranslations.js";
-import { getLang, format } from "../helpers.js";
-
-/** Eye height of a standing player, used to place the camera at head level. */
-const EYE_HEIGHT = 1.62;
-
-/**
- * Active spy sessions.
- * Maps the id of the spying player to the id of the observed player.
- * @type {Map<string, string>}
- */
-const activeSpies = new Map();
+import { getLang } from "../helpers.js";
+import { startView, stopView, getView } from "../cameraService.js";
 
 /**
  * Opens the player selection menu.
- * If a spy session is already running, an extra "end spying" button is shown.
+ * If the player currently has an active view, an extra "end spying" button is shown.
  *
  * @param {import("@minecraft/server").Player} player The player who wants to spy.
  */
@@ -32,7 +23,9 @@ export async function openSpyOnPlayerMenu(player) {
     const allPlayers = world.getAllPlayers();
     const targets = allPlayers.filter(p => p.id !== player.id);
 
-    if (targets.length === 0) {
+    const isViewing = getView(player.id) !== undefined;
+
+    if (targets.length === 0 && !isViewing) {
         const form = new ActionFormData()
             .title(t.title)
             .body(t.noOtherPlayersBody)
@@ -44,14 +37,14 @@ export async function openSpyOnPlayerMenu(player) {
 
     const form = new ActionFormData()
         .title(t.title)
-        .body(t.body);
+        .body(targets.length > 0 ? t.body : t.noOtherPlayersBody);
 
     targets.forEach(target => {
         form.button(target.name);
     });
 
     // The "end spying" button is always the last one.
-    if (activeSpies.has(player.id)) {
+    if (isViewing) {
         form.button(t.endSpying);
     }
 
@@ -59,67 +52,14 @@ export async function openSpyOnPlayerMenu(player) {
 
     if (result.canceled) return;
 
-    if (activeSpies.has(player.id) && result.selection === targets.length) {
-        stopSpying(player);
+    if (isViewing && result.selection === targets.length) {
+        stopView(player.id);
         return;
     }
 
     const selectedTarget = targets[result.selection];
-    startSpying(player, selectedTarget);
-}
 
-/**
- * Starts a spy session.
- *
- * @param {import("@minecraft/server").Player} spy The spying player.
- * @param {import("@minecraft/server").Player} target The observed player.
- */
-function startSpying(spy, target) {
-    const t = Translations[getLang(spy)];
-
-    activeSpies.set(spy.id, target.id);
-    spy.onScreenDisplay.setActionBar(
-        format(t.spyingStarted, { NAME: target.name })
-    );
-}
-
-/**
- * Ends a spy session and resets the spy's camera.
- *
- * @param {import("@minecraft/server").Player} spy The spying player.
- */
-function stopSpying(spy) {
-    const t = Translations[getLang(spy)];
-
-    activeSpies.delete(spy.id);
-    spy.runCommandAsync("camera @s clear");
-    spy.onScreenDisplay.setActionBar(t.spyingEnded);
-}
-
-// Every tick: move each spy's camera to the head of the observed player.
-system.runInterval(() => {
-    for (const [spyId, targetId] of activeSpies.entries()) {
-        const spy = world.getAllPlayers().find(p => p.id === spyId);
-        const target = world.getAllPlayers().find(p => p.id === targetId);
-
-        // End the session if the spy or the target left the world.
-        if (!spy || !target) {
-            if (spy) stopSpying(spy);
-            else activeSpies.delete(spyId);
-            continue;
-        }
-
-        const t = Translations[getLang(spy)];
-
-        spy.onScreenDisplay.setActionBar(
-            format(t.spyingStarted, { NAME: target.name })
-        );
-
-        const pos = target.location;
-        const rot = target.getRotation();
-
-        spy.runCommandAsync(
-            `camera @s set minecraft:free pos ${pos.x} ${pos.y + EYE_HEIGHT} ${pos.z} rot ${rot.x} ${rot.y}`
-        );
+    if (selectedTarget) {
+        startView(player.id, { type: "player", id: selectedTarget.name });
     }
-}, 1);
+}
