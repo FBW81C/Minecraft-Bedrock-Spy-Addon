@@ -2,8 +2,6 @@
 
 A Minecraft Bedrock add-on that lets players **view security cameras** and **spy on other players**. Views are rendered with the `/camera` command (free camera).
 
-Current version: v1.0
-
 Author: FBW81C
 YouTube: FBW81C
 
@@ -15,6 +13,8 @@ YouTube: FBW81C
 
 
 ## Features
+
+### --- This Addon is currently no survival friendly. The Camera Controller CAN NOT be crafted. --- 
 
 - **Invisible Security cameras** with name, position, orientation and dimension (create, list, edit, delete)
 - **Camera items**: every camera can be handed out as an item. Holding it puts you behind the camera
