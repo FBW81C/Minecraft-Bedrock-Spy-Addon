@@ -14,7 +14,7 @@ YouTube: FBW81C
 
 ## Features
 
-### --- This Addon is currently no survival friendly. The Camera Controller CAN NOT be crafted. --- 
+### --- This Addon is currently NOT survival friendly. The Camera Controller CAN NOT be crafted. --- 
 
 - **Invisible Security cameras** with name, position, orientation and dimension (create, list, edit, delete)
 - **Camera items**: every camera can be handed out as an item. Holding it puts you behind the camera
