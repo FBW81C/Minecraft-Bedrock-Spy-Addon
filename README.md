@@ -175,3 +175,6 @@ Cameras are stored as JSON in the world dynamic property `fbw81c_spyaddon:camera
 - Permission system for accessing the Spy Controller
 - More languages
 - Commands for managing cameras (placing, removing, editing) e.g: `/scriptevent fbw81c:spy add camera Home false 100 50 200 0 0`
+
+## License
+- See LISENCE.md
